@@ -11,6 +11,14 @@ ALL_INSTITUTIONS = [
     ('OUTRO', 'Outro'),
 ]
 
+WEEKDAYS = [
+    (2, 'SEGUNDA'),
+    (3, 'TERCA'),
+    (4, 'QUARTA'),
+    (5, 'QUINTA'),
+    (6, 'SEXTA'),
+]
+
 TIMES = [
     ('NA', 'NONE'),
     ('M', 'MORNING'),
@@ -18,19 +26,46 @@ TIMES = [
     ('N', 'NIGHT'),
 ]
 
-class Day(models.Model):
-    departure = models.CharField(max_length=50, choices=TIMES)
-    arrival = models.CharField(max_length=50, choices=TIMES)
-
-class Schedule(models.Model):
-    monday = models.OneToOneField(Day, on_delete=models.CASCADE, related_name='monday')
-    tuesday = models.OneToOneField(Day, on_delete=models.CASCADE, related_name='tuesday')
-    wednesday = models.OneToOneField(Day, on_delete=models.CASCADE, related_name='wednesday')
-    thursday = models.OneToOneField(Day, on_delete=models.CASCADE, related_name='thursday')
-    friday = models.OneToOneField(Day, on_delete=models.CASCADE, related_name='friday')
-
 class Student(models.Model):
-    name = models.CharField(max_length=100, blank=False, null=False)
+    name = models.CharField(max_length=100)
     email = models.EmailField()
     institution = models.CharField(max_length=200, choices=ALL_INSTITUTIONS)
-    schedule = models.OneToOneField(Schedule, on_delete=models.CASCADE, null=True, blank=True)
+
+class Day(models.Model):
+    weekday_id = models.IntegerField(choices=WEEKDAYS, unique=True, null=False)
+    departure = models.CharField(max_length=50, choices=TIMES)
+    arrival = models.CharField(max_length=50, choices=TIMES)
+    student = models.ForeignKey(Student, related_name='schedule', on_delete=models.CASCADE, blank=True)
+
+REQUEST = {
+    "name": "teste",
+    "email": "teste@ererr.com",
+    "institution": "UFRN",
+    "schedule": [
+        {
+            "weekday_id": 2,
+            "departure": "NA",
+            "arrival": "NA"
+        },
+        {
+            "weekday_id": 3,
+            "departure": "NA",
+            "arrival": "NA"
+        },
+        {
+            "weekday_id": 4,
+            "departure": "NA",
+            "arrival": "NA"
+        },
+        {
+            "weekday_id": 5,
+            "departure": "NA",
+            "arrival": "NA"
+        },
+        {
+            "weekday_id": 6,
+            "departure": "NA",
+            "arrival": "NA"
+        }
+    ]
+}
